@@ -9,42 +9,16 @@ function generateOTP() {
   return String(array[0] % 1000000).padStart(6, "0");
 }
 
-async function sendEmail({
-  email,
-  token,
-  subject,
+function otpEmailHtml({
   heading,
   description,
+  token,
 }: {
-  email: string;
-  token: string;
-  subject: string;
   heading: string;
   description: string;
+  token: string;
 }) {
-  const apiUrl = process.env.VIKTOR_SPACES_API_URL;
-  const projectName = process.env.VIKTOR_SPACES_PROJECT_NAME;
-  const projectSecret = process.env.VIKTOR_SPACES_PROJECT_SECRET;
-
-  if (!apiUrl || !projectName || !projectSecret) {
-    throw new Error(
-      "Viktor Spaces environment variables not configured. " +
-        "Required: VIKTOR_SPACES_API_URL, VIKTOR_SPACES_PROJECT_NAME, VIKTOR_SPACES_PROJECT_SECRET",
-    );
-  }
-
-  const response = await fetch(`${apiUrl}/api/viktor-spaces/send-email`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      project_name: projectName,
-      project_secret: projectSecret,
-      to_email: email,
-      from_name: "Charity Swipes",
-      subject: `${subject} — ${APP_NAME}`,
-      html_content: `
+  return `
         <div style="font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 480px; margin: 0 auto; background: #0A0A1A; border-radius: 12px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #E91E63 0%, #FF5C8D 50%, #00E5FF 100%); padding: 20px 28px; text-align: center;">
             <h1 style="margin: 0; font-size: 22px; color: #fff; font-weight: 700;">Charity Swipes</h1>
@@ -62,8 +36,78 @@ async function sendEmail({
             <p style="color: #444460; font-size: 11px; margin: 0;">${APP_NAME} · Swipe for a Cause</p>
           </div>
         </div>
-      `,
-      text_content: `${APP_NAME}\n\n${heading}\n\n${description}\n\nYour code is: ${token}\n\nThis code expires in 15 minutes.\n\n---\n${APP_NAME} · Swipe for a Cause`,
+  `;
+}
+
+async function sendEmail({
+  email,
+  token,
+  subject,
+  heading,
+  description,
+}: {
+  email: string;
+  token: string;
+  subject: string;
+  heading: string;
+  description: string;
+}) {
+  const html = otpEmailHtml({ heading, description, token });
+  const text = `${APP_NAME}\n\n${heading}\n\n${description}\n\nYour code is: ${token}\n\nThis code expires in 15 minutes.\n\n---\n${APP_NAME} · Swipe for a Cause`;
+
+  // Self-hosted path: send directly through Resend when a key is configured.
+  // This deployment runs on the customer's own Convex + Cloudflare, so it must
+  // not depend on the Viktor Spaces email relay (which only authenticates
+  // Spaces-hosted projects).
+  const resendKey = process.env.RESEND_API_KEY;
+  if (resendKey) {
+    const from =
+      process.env.EMAIL_FROM ?? "Charity Swipes <noreply@charityswipes.org>";
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to: [email],
+        subject: `${subject} — ${APP_NAME}`,
+        html,
+        text,
+      }),
+    });
+    if (!res.ok) {
+      throw new Error(`Resend rejected the email: ${await res.text()}`);
+    }
+    return;
+  }
+
+  const apiUrl = process.env.VIKTOR_SPACES_API_URL;
+  const projectName = process.env.VIKTOR_SPACES_PROJECT_NAME;
+  const projectSecret = process.env.VIKTOR_SPACES_PROJECT_SECRET;
+
+  if (!apiUrl || !projectName || !projectSecret) {
+    throw new Error(
+      "No email provider configured. Set RESEND_API_KEY (and optionally " +
+        "EMAIL_FROM) on this Convex deployment to enable verification and " +
+        "password-reset emails.",
+    );
+  }
+
+  const response = await fetch(`${apiUrl}/api/viktor-spaces/send-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      project_name: projectName,
+      project_secret: projectSecret,
+      to_email: email,
+      from_name: "Charity Swipes",
+      subject: `${subject} — ${APP_NAME}`,
+      html_content: html,
+      text_content: text,
       email_type: "otp",
     }),
   });
