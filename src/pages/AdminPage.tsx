@@ -1057,7 +1057,10 @@ function AnalysisInput({
 
 /* ===== Admin Integrations (Slack + Discord) ===== */
 function AdminIntegrations() {
-  const convexUrl = "https://tough-parakeet-450.convex.site";
+  const convexUrl = (import.meta.env.VITE_CONVEX_URL ?? "").replace(
+    ".convex.cloud",
+    ".convex.site",
+  );
   const [copied, setCopied] = useState<string | null>(null);
 
   const copyUrl = (label: string, url: string) => {

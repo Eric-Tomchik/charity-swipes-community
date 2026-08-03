@@ -214,9 +214,11 @@ const schema = defineSchema({
       v.literal("pending"),
       v.literal("approved"),
       v.literal("rejected"),
+      v.literal("archived"),
     ),
     reviewedBy: v.optional(v.string()),
     reviewNote: v.optional(v.string()),
+    archivedAt: v.optional(v.number()),
     createdAt: v.number(),
   })
     .index("by_userId", ["userId"])
@@ -337,6 +339,9 @@ const schema = defineSchema({
 
   leads: defineTable({
     businessName: v.string(),
+    address: v.optional(v.string()),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
     entityType: v.optional(v.string()),
     ownerName: v.optional(v.string()),
     phone: v.optional(v.string()),

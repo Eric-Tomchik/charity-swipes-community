@@ -1,4 +1,56 @@
-# Convex + Vite + React + shadcn/ui Starter
+# Charity Swipes Community
+
+The merchant community app for [Charity Swipes](https://charityswipes.org): channels,
+support tickets, charity voting, statements, lead tools, and the merchant/rep CRM.
+
+## Layout
+
+| Path | What it is |
+| --- | --- |
+| `src/` | React 19 + Vite + Tailwind v4 front-end (18 pages) |
+| `convex/` | Convex backend: schema, queries/mutations, HTTP endpoints, auth |
+| `marketing-site/` | The static charityswipes.org homepage (single self-contained `index.html`) |
+| `ios/`, `android/` | Capacitor native shells |
+| `deploy/cloudflare-pages.md` | Cloudflare Pages hosting setup (build config, domain, SPA routing) |
+
+## Production backend
+
+Convex deployment **`trustworthy-octopus-88`** holds production data and functions.
+
+```bash
+bun install
+CONVEX_DEPLOY_KEY="prod:trustworthy-octopus-88|..." bunx convex deploy   # push functions
+CONVEX_DEPLOY_KEY="prod:trustworthy-octopus-88|..." bunx convex data     # inspect tables
+```
+
+Runtime configuration (community name, signup/approval rules, Google Places and Apollo
+API keys) lives in the `communitySettings` table and is edited in the app's Admin page —
+not in environment variables.
+
+## Hosting the community front-end
+
+Hosted on **Cloudflare Pages**, building this repository directly from GitHub on every push to
+`main`. Setup steps, build settings and the custom-domain flow are in
+[`deploy/cloudflare-pages.md`](deploy/cloudflare-pages.md).
+
+- Build command `bun run build`, output directory `dist`
+- `VITE_CONVEX_URL=https://trustworthy-octopus-88.convex.cloud` as a Pages environment variable
+- `public/_redirects` (`/*  /index.html  200`) keeps client-side routes working
+- Custom domain `community.erictomchik.com` — Cloudflare manages the DNS record and certificate
+  itself, since the zone lives in the same account
+
+## Marketing site
+
+`marketing-site/index.html` is deployed separately (currently IONOS at charityswipes.org).
+It references the community app in four places and posts its contact form to
+`https://trustworthy-octopus-88.convex.site/contact-form`. Referral tracking (`?ref=`
+sales rep, `?mref=` merchant) is forwarded to the community as URL parameters — the
+old `.charityswipes.org` cookie hand-off cannot work across domains.
+
+---
+
+# Template reference
+
 
 A production-ready full-stack web app template.
 

@@ -17,10 +17,22 @@ export function getRepCookie(): string | null {
   return match ? match[1] : null;
 }
 
+function setMerchantCookie(referralUid: string) {
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `cs_mref_uid=${referralUid}; expires=${expires}; path=/; SameSite=Lax`;
+}
+
+export function getMerchantCookie(): string | null {
+  const match = document.cookie.match(/cs_mref_uid=([^;]+)/);
+  return match ? match[1] : null;
+}
+
 export function SignupPage() {
   const [searchParams] = useSearchParams();
   const refUid = searchParams.get("ref");
+  const mrefUid = searchParams.get("mref");
   const trackClick = useMutation(api.salesReps.trackReferralClick);
+  const trackMerchantClick = useMutation(api.merchantReferrals.trackClick);
 
   useEffect(() => {
     if (refUid) {
@@ -30,6 +42,14 @@ export function SignupPage() {
       trackClick({ repUid: refUid }).catch(() => {});
     }
   }, [refUid]);
+
+  useEffect(() => {
+    if (mrefUid) {
+      // Merchant-to-merchant referral (?mref=) — cookie plus click tracking.
+      setMerchantCookie(mrefUid);
+      trackMerchantClick({ referralUid: mrefUid }).catch(() => {});
+    }
+  }, [mrefUid]);
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 relative">
@@ -52,6 +72,11 @@ export function SignupPage() {
           {refUid && (
             <Badge variant="secondary" className="mt-2">
               Referred by rep: {refUid}
+            </Badge>
+          )}
+          {mrefUid && (
+            <Badge variant="secondary" className="mt-2">
+              Referred by merchant: {mrefUid}
             </Badge>
           )}
         </div>
