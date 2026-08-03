@@ -35,7 +35,7 @@ Hosted on **Cloudflare Pages**, building this repository directly from GitHub on
 
 - Build command `bun run build`, output directory `dist`
 - `VITE_CONVEX_URL=https://trustworthy-octopus-88.convex.cloud` as a Pages environment variable
-- `public/_redirects` (`/*  /index.html  200`) keeps client-side routes working
+- `wrangler.jsonc` (`not_found_handling: "single-page-application"`) keeps client-side routes working
 - Custom domain `community.erictomchik.com` — Cloudflare manages the DNS record and certificate
   itself, since the zone lives in the same account
 

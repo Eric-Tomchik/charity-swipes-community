@@ -35,15 +35,19 @@ and issues the certificate itself — nothing to add by hand.
 
 ## Client-side routing
 
-`public/_redirects` contains:
+This project deploys as a **Worker with static assets** (`npx wrangler deploy`), not as Pages,
+so SPA fallback comes from `wrangler.jsonc`:
 
-```
-/*    /index.html   200
+```jsonc
+"assets": { "directory": "./dist", "not_found_handling": "single-page-application" }
 ```
 
-That makes Cloudflare serve the SPA shell for deep links such as `/admin`, `/community` and
-`/channel/general` instead of returning 404. Static assets still win over the catch-all, so
-this does not interfere with `/assets/*`.
+That serves the SPA shell for deep links such as `/admin` and `/channel/general` instead of
+returning 404. Static assets still win, so `/assets/*` is unaffected.
+
+Do **not** add a Pages-style `public/_redirects` with `/*  /index.html  200`: Workers validates
+`_redirects` too and rejects that rule with `Invalid _redirects configuration: Infinite loop
+detected in this rule` (code 100324), which fails the deploy.
 
 ## Private repositories
 
