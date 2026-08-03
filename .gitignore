@@ -9,8 +9,9 @@ dist/
 .env.local
 .env.*.local
 
-# Convex generated files
-convex/_generated/
+# Convex generated files are committed so CI builds (Cloudflare Pages) can
+# typecheck without needing Convex credentials. Regenerate with `convex codegen`
+# after changing convex/ functions or schema.
 
 # IDE
 .vscode/
