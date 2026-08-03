@@ -11,7 +11,7 @@ support tickets, charity voting, statements, lead tools, and the merchant/rep CR
 | `convex/` | Convex backend: schema, queries/mutations, HTTP endpoints, auth |
 | `marketing-site/` | The static charityswipes.org homepage (single self-contained `index.html`) |
 | `ios/`, `android/` | Capacitor native shells |
-| `deploy/github-pages-workflow.yml` | GitHub Pages build/publish workflow (copy to `.github/workflows/`) |
+| `deploy/cloudflare-pages.md` | Cloudflare Pages hosting setup (build config, domain, SPA routing) |
 
 ## Production backend
 
@@ -29,19 +29,15 @@ not in environment variables.
 
 ## Hosting the community front-end
 
-Copy `deploy/github-pages-workflow.yml` to `.github/workflows/deploy-pages.yml` (GitHub blocks
-apps from creating workflow files, so this one step has to be done by hand). It builds with `VITE_CONVEX_URL=https://trustworthy-octopus-88.convex.cloud`
-and deploys to GitHub Pages on every push to `main`. Two one-time steps:
+Hosted on **Cloudflare Pages**, building this repository directly from GitHub on every push to
+`main`. Setup steps, build settings and the custom-domain flow are in
+[`deploy/cloudflare-pages.md`](deploy/cloudflare-pages.md).
 
-1. Move the workflow into place, then **Repo → Settings → Pages → Source: GitHub Actions**
-2. **DNS (Cloudflare, `erictomchik.com` zone):** `CNAME  community → eric-tomchik.github.io`,
-   proxy **off** (DNS only) so GitHub can issue the TLS certificate.
-
-`404.html` is published as a copy of `index.html` so client-side routes work on Pages.
-
-> GitHub Pages only serves private repositories on paid plans. If this repo is made
-> private on a free plan, host the same `dist/` output on Cloudflare Pages instead —
-> the build command and `VITE_CONVEX_URL` are identical.
+- Build command `bun run build`, output directory `dist`
+- `VITE_CONVEX_URL=https://trustworthy-octopus-88.convex.cloud` as a Pages environment variable
+- `public/_redirects` (`/*  /index.html  200`) keeps client-side routes working
+- Custom domain `community.erictomchik.com` — Cloudflare manages the DNS record and certificate
+  itself, since the zone lives in the same account
 
 ## Marketing site
 
