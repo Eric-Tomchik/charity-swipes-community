@@ -1,0 +1,12 @@
+{
+  // Charity Swipes Community — static SPA served by Cloudflare Workers static assets.
+  // There is no Worker script: Cloudflare serves ./dist directly, and unknown paths
+  // fall back to index.html so client-side routes (/admin, /channel/:slug, ...) work.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "charity-swipes-community",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
