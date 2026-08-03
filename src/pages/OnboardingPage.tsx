@@ -17,7 +17,7 @@ import { api } from "../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getRepCookie } from "./SignupPage";
+import { getMerchantCookie, getRepCookie } from "./SignupPage";
 
 type AccountType = "merchant" | "prospect" | "sales_rep";
 
@@ -70,6 +70,9 @@ const HOW_HEARD = [
 export function OnboardingPage() {
   const user = useQuery(api.auth.currentUser);
   const createProfile = useMutation(api.userProfiles.create);
+  const attachMerchantReferral = useMutation(
+    api.merchantReferrals.attachProspectToClick,
+  );
   const createApplication = useMutation(api.applications.create);
   const navigate = useNavigate();
 
@@ -164,6 +167,18 @@ export function OnboardingPage() {
         role: roleMap[accountType],
         referredByRepId: refUid || undefined,
       });
+
+      // Attribute the signup to a referring merchant, if they arrived via ?mref=
+      const mrefUid = getMerchantCookie();
+      if (mrefUid && user?._id) {
+        await attachMerchantReferral({
+          referralUid: mrefUid,
+          prospectUserId: user._id,
+          prospectName: name.trim(),
+          prospectEmail: user?.email || undefined,
+          businessName: businessName.trim() || undefined,
+        }).catch(() => {});
+      }
 
       // For merchants and prospects, submit qualifying application
       if (accountType === "merchant" || accountType === "prospect") {

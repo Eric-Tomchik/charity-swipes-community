@@ -1,4 +1,60 @@
-# Convex + Vite + React + shadcn/ui Starter
+# Charity Swipes Community
+
+The merchant community app for [Charity Swipes](https://charityswipes.org): channels,
+support tickets, charity voting, statements, lead tools, and the merchant/rep CRM.
+
+## Layout
+
+| Path | What it is |
+| --- | --- |
+| `src/` | React 19 + Vite + Tailwind v4 front-end (18 pages) |
+| `convex/` | Convex backend: schema, queries/mutations, HTTP endpoints, auth |
+| `marketing-site/` | The static charityswipes.org homepage (single self-contained `index.html`) |
+| `ios/`, `android/` | Capacitor native shells |
+| `deploy/github-pages-workflow.yml` | GitHub Pages build/publish workflow (copy to `.github/workflows/`) |
+
+## Production backend
+
+Convex deployment **`trustworthy-octopus-88`** holds production data and functions.
+
+```bash
+bun install
+CONVEX_DEPLOY_KEY="prod:trustworthy-octopus-88|..." bunx convex deploy   # push functions
+CONVEX_DEPLOY_KEY="prod:trustworthy-octopus-88|..." bunx convex data     # inspect tables
+```
+
+Runtime configuration (community name, signup/approval rules, Google Places and Apollo
+API keys) lives in the `communitySettings` table and is edited in the app's Admin page —
+not in environment variables.
+
+## Hosting the community front-end
+
+Copy `deploy/github-pages-workflow.yml` to `.github/workflows/deploy-pages.yml` (GitHub blocks
+apps from creating workflow files, so this one step has to be done by hand). It builds with `VITE_CONVEX_URL=https://trustworthy-octopus-88.convex.cloud`
+and deploys to GitHub Pages on every push to `main`. Two one-time steps:
+
+1. Move the workflow into place, then **Repo → Settings → Pages → Source: GitHub Actions**
+2. **DNS (Cloudflare, `erictomchik.com` zone):** `CNAME  community → eric-tomchik.github.io`,
+   proxy **off** (DNS only) so GitHub can issue the TLS certificate.
+
+`404.html` is published as a copy of `index.html` so client-side routes work on Pages.
+
+> GitHub Pages only serves private repositories on paid plans. If this repo is made
+> private on a free plan, host the same `dist/` output on Cloudflare Pages instead —
+> the build command and `VITE_CONVEX_URL` are identical.
+
+## Marketing site
+
+`marketing-site/index.html` is deployed separately (currently IONOS at charityswipes.org).
+It references the community app in four places and posts its contact form to
+`https://trustworthy-octopus-88.convex.site/contact-form`. Referral tracking (`?ref=`
+sales rep, `?mref=` merchant) is forwarded to the community as URL parameters — the
+old `.charityswipes.org` cookie hand-off cannot work across domains.
+
+---
+
+# Template reference
+
 
 A production-ready full-stack web app template.
 

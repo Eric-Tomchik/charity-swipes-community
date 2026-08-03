@@ -1,0 +1,66 @@
+name: Deploy community to GitHub Pages
+
+# Builds the React front-end against the Charity Swipes production Convex
+# deployment and publishes it to GitHub Pages, served at the custom domain in
+# the CUSTOM_DOMAIN env below.
+#
+# One-time setup in the repository:
+#   Settings -> Pages -> Build and deployment -> Source: "GitHub Actions"
+# One-time DNS record (Cloudflare, erictomchik.com zone):
+#   CNAME  community  ->  eric-tomchik.github.io   (proxy OFF / DNS only)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  # Convex production deployment that holds the community data.
+  VITE_CONVEX_URL: https://trustworthy-octopus-88.convex.cloud
+  CUSTOM_DOMAIN: community.erictomchik.com
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Add SPA fallback and custom domain
+        run: |
+          # GitHub Pages has no rewrite rules; a copy of index.html served as
+          # 404.html makes client-side routes (/community, /admin, ...) work.
+          cp dist/index.html dist/404.html
+          echo "$CUSTOM_DOMAIN" > dist/CNAME
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

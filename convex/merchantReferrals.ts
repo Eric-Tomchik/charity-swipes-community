@@ -274,6 +274,46 @@ export const updateClickStatus = mutation({
   },
 });
 
+// Link a freshly-signed-up prospect to the merchant referral click that
+// brought them in. Called from onboarding using the `cs_mref_uid` cookie that
+// SignupPage sets from the `?mref=` URL parameter.
+export const attachProspectToClick = mutation({
+  args: {
+    referralUid: v.string(),
+    prospectUserId: v.string(),
+    prospectName: v.optional(v.string()),
+    prospectEmail: v.optional(v.string()),
+    businessName: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const clicks = await ctx.db
+      .query("merchantReferralClicks")
+      .withIndex("by_referralUid", (q) => q.eq("referralUid", args.referralUid))
+      .collect();
+
+    // Most recent click that has not been attributed to anyone yet.
+    const click = clicks
+      .filter((c) => !c.prospectUserId)
+      .sort((a, b) => b.createdAt - a.createdAt)[0];
+    if (!click) return;
+
+    await ctx.db.patch(click._id, {
+      prospectUserId: args.prospectUserId,
+      status: "signed_up",
+      ...(args.prospectName ? { prospectName: args.prospectName } : {}),
+      ...(args.prospectEmail ? { prospectEmail: args.prospectEmail } : {}),
+      ...(args.businessName ? { businessName: args.businessName } : {}),
+    });
+
+    const merchant = await ctx.db.get(click.merchantReferralId);
+    if (merchant) {
+      await ctx.db.patch(merchant._id, {
+        totalSignups: merchant.totalSignups + 1,
+      });
+    }
+  },
+});
+
 // Admin: list all merchant referral profiles
 export const listAll = query({
   args: {},
