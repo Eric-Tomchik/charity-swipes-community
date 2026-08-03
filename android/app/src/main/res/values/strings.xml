@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Charity Swipes</string>
+    <string name="title_activity_main">Charity Swipes</string>
+    <string name="package_name">com.charityswipes.community</string>
+    <string name="custom_url_scheme">com.charityswipes.community</string>
+</resources>

@@ -1,0 +1,235 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+}
+
+:root {
+  --sidebar-width: 16rem;
+  --sidebar-width-icon: 3rem;
+
+  /* Charity Swipes Magenta/Pink brand */
+  --brand: oklch(0.65 0.25 340);
+  --brand-foreground: oklch(1 0 0);
+
+  --primary: oklch(0.65 0.25 340);
+  --primary-foreground: oklch(1 0 0);
+
+  --success: var(--color-emerald-600);
+  --success-foreground: var(--color-white);
+  --warning: var(--color-amber-500);
+  --warning-foreground: var(--color-amber-950);
+  --info: var(--color-cyan-500);
+  --info-foreground: var(--color-white);
+
+  --chart-1: oklch(0.65 0.25 340);
+  --chart-2: var(--color-orange-500);
+  --chart-3: var(--color-cyan-500);
+  --chart-4: var(--color-rose-500);
+  --chart-5: var(--color-lime-500);
+
+  --radius: 0.625rem;
+  --background: oklch(0.97 0.005 280);
+  --foreground: oklch(0.15 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 260);
+  --secondary: oklch(0.96 0.005 260);
+  --secondary-foreground: oklch(0.3 0.01 260);
+  --muted: oklch(0.96 0.005 260);
+  --muted-foreground: oklch(0.45 0.015 260);
+  --accent: oklch(0.96 0.005 260);
+  --accent-foreground: oklch(0.15 0.01 260);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.92 0.005 260);
+  --input: oklch(0.92 0.005 260);
+  --ring: oklch(0.65 0.25 340);
+
+  /* Dark sidebar matching original */
+  --sidebar: oklch(0.2 0.015 270);
+  --sidebar-foreground: oklch(0.9 0 0);
+  --sidebar-primary: oklch(0.65 0.25 340);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.28 0.02 270);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.3 0.015 270);
+  --sidebar-ring: oklch(0.65 0.25 340);
+}
+
+.dark {
+  --primary: oklch(0.72 0.22 340);
+  --primary-foreground: oklch(1 0 0);
+  --brand: oklch(0.72 0.22 340);
+  --brand-foreground: oklch(1 0 0);
+
+  --background: oklch(0.15 0.01 270);
+  --foreground: oklch(0.95 0.005 0);
+  --card: oklch(0.19 0.01 270);
+  --card-foreground: oklch(0.95 0.005 0);
+  --popover: oklch(0.19 0.01 270);
+  --popover-foreground: oklch(0.95 0.005 0);
+  --secondary: oklch(0.24 0.01 270);
+  --secondary-foreground: oklch(0.95 0.005 0);
+  --muted: oklch(0.24 0.01 270);
+  --muted-foreground: oklch(0.7 0.01 270);
+  --accent: oklch(0.24 0.01 270);
+  --accent-foreground: oklch(0.95 0.005 0);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.32 0.015 270);
+  --input: oklch(0.32 0.015 270);
+  --ring: oklch(0.72 0.22 340);
+
+  --sidebar: oklch(0.13 0.01 270);
+  --sidebar-foreground: oklch(0.92 0 0);
+  --sidebar-primary: oklch(0.72 0.22 340);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.22 0.015 270);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.28 0.015 270);
+  --sidebar-ring: oklch(0.72 0.22 340);
+}
+
+/* ================================================================
+   DARK MODE: Comprehensive color overrides for readability
+   ================================================================ */
+
+/* --- Text colors: lighten all dark-on-dark colors --- */
+.dark .text-gray-900 { color: oklch(0.95 0 0) !important; }
+.dark .text-gray-800 { color: oklch(0.9 0 0) !important; }
+.dark .text-gray-700 { color: oklch(0.85 0 0) !important; }
+.dark .text-gray-600 { color: oklch(0.78 0.005 260) !important; }
+.dark .text-gray-500 { color: oklch(0.7 0.005 260) !important; }
+.dark .text-slate-900 { color: oklch(0.95 0 0) !important; }
+.dark .text-slate-800 { color: oklch(0.9 0 0) !important; }
+.dark .text-slate-700 { color: oklch(0.85 0 0) !important; }
+.dark .text-slate-600 { color: oklch(0.78 0.005 260) !important; }
+.dark .text-black { color: oklch(0.95 0 0) !important; }
+
+/* --- Semantic text colors: ensure visibility in dark mode --- */
+.dark .text-pink-600 { color: oklch(0.78 0.2 340) !important; }
+.dark .text-pink-700 { color: oklch(0.75 0.2 340) !important; }
+.dark .text-emerald-600 { color: oklch(0.78 0.16 160) !important; }
+.dark .text-emerald-700 { color: oklch(0.75 0.16 160) !important; }
+.dark .text-blue-600 { color: oklch(0.78 0.17 250) !important; }
+.dark .text-blue-700 { color: oklch(0.75 0.17 250) !important; }
+.dark .text-yellow-600 { color: oklch(0.82 0.15 85) !important; }
+.dark .text-yellow-700 { color: oklch(0.8 0.15 85) !important; }
+.dark .text-amber-600 { color: oklch(0.82 0.15 75) !important; }
+.dark .text-amber-700 { color: oklch(0.8 0.15 75) !important; }
+.dark .text-red-600 { color: oklch(0.75 0.18 25) !important; }
+.dark .text-red-700 { color: oklch(0.72 0.18 25) !important; }
+.dark .text-purple-600 { color: oklch(0.78 0.17 300) !important; }
+.dark .text-purple-700 { color: oklch(0.75 0.17 300) !important; }
+.dark .text-teal-500 { color: oklch(0.75 0.14 185) !important; }
+.dark .text-teal-600 { color: oklch(0.72 0.14 185) !important; }
+.dark .text-rose-500 { color: oklch(0.75 0.18 15) !important; }
+.dark .text-orange-500 { color: oklch(0.78 0.16 55) !important; }
+.dark .text-blue-500 { color: oklch(0.73 0.17 250) !important; }
+
+/* --- Background colors: darken light backgrounds in dark mode --- */
+.dark .bg-white { background-color: oklch(0.19 0.01 270) !important; }
+.dark .bg-gray-50 { background-color: oklch(0.22 0.01 270) !important; }
+.dark .bg-gray-100 { background-color: oklch(0.25 0.01 270) !important; }
+.dark .bg-gray-200 { background-color: oklch(0.3 0.01 270) !important; }
+.dark .bg-blue-50 { background-color: oklch(0.22 0.03 250) !important; }
+.dark .bg-yellow-50 { background-color: oklch(0.22 0.03 85) !important; }
+.dark .bg-purple-50 { background-color: oklch(0.22 0.03 300) !important; }
+.dark .bg-emerald-50 { background-color: oklch(0.22 0.03 160) !important; }
+.dark .bg-red-50 { background-color: oklch(0.22 0.03 25) !important; }
+.dark .bg-pink-50 { background-color: oklch(0.22 0.03 340) !important; }
+.dark .bg-amber-50 { background-color: oklch(0.22 0.03 75) !important; }
+
+/* --- Ensure inputs/selects/textareas are readable --- */
+.dark select,
+.dark textarea,
+.dark input {
+  color: oklch(0.95 0 0);
+}
+
+/* --- Badge and status text inside dark tinted backgrounds --- */
+.dark .text-yellow-600 { color: oklch(0.82 0.15 85) !important; }
+.dark .text-emerald-600 { color: oklch(0.78 0.16 160) !important; }
+.dark .text-purple-600 { color: oklch(0.78 0.17 300) !important; }
+.dark .text-blue-600 { color: oklch(0.78 0.17 250) !important; }
+.dark .text-red-600 { color: oklch(0.75 0.18 25) !important; }
+
+/* --- Fix common border colors for contrast --- */
+.dark .border-amber-500\/30 { border-color: oklch(0.65 0.12 75 / 0.4) !important; }
+.dark .border-emerald-500\/30 { border-color: oklch(0.65 0.12 160 / 0.4) !important; }
+.dark .border-red-500\/30 { border-color: oklch(0.6 0.15 25 / 0.4) !important; }
+
+/* Base element dark mode text & background */
+html.dark {
+  color-scheme: dark;
+  color: oklch(0.95 0.005 0);
+  background-color: oklch(0.15 0.01 270);
+}
+html.dark body {
+  color: oklch(0.95 0.005 0);
+  background-color: oklch(0.15 0.01 270);
+}
+
+/* Force all tables, form elements, and containers to inherit text color in dark */
+.dark table, .dark th, .dark td,
+.dark div, .dark span, .dark p, .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark label, .dark li, .dark a {
+  color: inherit;
+}
+
+/* Re-apply muted-foreground in dark mode explicitly */
+.dark .text-muted-foreground {
+  color: oklch(0.7 0.01 270) !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
