@@ -18,6 +18,7 @@ import type * as charity from "../charity.js";
 import type * as communitySettings from "../communitySettings.js";
 import type * as constants from "../constants.js";
 import type * as contactForm from "../contactForm.js";
+import type * as crm from "../crm.js";
 import type * as directMessages from "../directMessages.js";
 import type * as http from "../http.js";
 import type * as leadScraper from "../leadScraper.js";
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   communitySettings: typeof communitySettings;
   constants: typeof constants;
   contactForm: typeof contactForm;
+  crm: typeof crm;
   directMessages: typeof directMessages;
   http: typeof http;
   leadScraper: typeof leadScraper;

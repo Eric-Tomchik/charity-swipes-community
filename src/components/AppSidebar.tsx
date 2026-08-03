@@ -2,23 +2,24 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import {
   Bell,
+  Building2,
+  Database,
   FileSearch,
   Heart,
   Home,
   LogOut,
   Mail,
   Moon,
+  QrCode,
+  Radar,
   Settings,
   Shield,
   Sun,
   TicketCheck,
-  Database,
-  QrCode,
-  Radar,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useTheme } from "../contexts/ThemeContext";
 import { api } from "../../convex/_generated/api";
+import { useTheme } from "../contexts/ThemeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import {
@@ -99,8 +100,8 @@ function SidebarNav() {
   const location = useLocation();
   const profile = useQuery(api.userProfiles.get);
   const channels = useQuery(api.channels.list);
-  const publicChannels = channels?.filter((c) => c.category === "public") ?? [];
-  const memberChannels = channels?.filter((c) => c.category === "member") ?? [];
+  const publicChannels = channels?.filter(c => c.category === "public") ?? [];
+  const memberChannels = channels?.filter(c => c.category === "member") ?? [];
 
   const isAdmin = profile?.role === "admin";
   const isRep = profile?.role === "sales_rep";
@@ -115,7 +116,7 @@ function SidebarNav() {
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
-            {mainNavItems.map((item) => (
+            {mainNavItems.map(item => (
               <NavLink
                 key={item.href}
                 href={item.href}
@@ -123,9 +124,11 @@ function SidebarNav() {
                 icon={item.icon}
                 isActive={location.pathname === item.href}
                 badge={
-                  item.label === "Notifications" ? unreadNotifications || undefined :
-                  item.label === "Messages" ? dmUnreadCount || undefined :
-                  undefined
+                  item.label === "Notifications"
+                    ? unreadNotifications || undefined
+                    : item.label === "Messages"
+                      ? dmUnreadCount || undefined
+                      : undefined
                 }
               />
             ))}
@@ -143,6 +146,14 @@ function SidebarNav() {
                 label="Rep Dashboard"
                 icon={QrCode}
                 isActive={location.pathname === "/rep-dashboard"}
+              />
+            )}
+            {(isRep || isAdmin) && (
+              <NavLink
+                href="/crm"
+                label="Merchant CRM"
+                icon={Building2}
+                isActive={location.pathname === "/crm"}
               />
             )}
             {(isRep || isAdmin) && (
@@ -172,7 +183,7 @@ function SidebarNav() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {publicChannels.map((ch) => (
+              {publicChannels.map(ch => (
                 <NavLink
                   key={ch._id}
                   href={`/channel/${ch.slug}`}
@@ -187,28 +198,27 @@ function SidebarNav() {
         </SidebarGroup>
       )}
 
-      {memberChannels.length > 0 &&
-        profile?.role !== "prospect" && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-[11px] uppercase tracking-wider text-sidebar-foreground/50">
-              Member Channels
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {memberChannels.map((ch) => (
-                  <NavLink
-                    key={ch._id}
-                    href={`/channel/${ch.slug}`}
-                    label={ch.name}
-                    emoji={ch.icon}
-                    isActive={location.pathname === `/channel/${ch.slug}`}
-                    badge={unreadCounts[ch.slug] || undefined}
-                  />
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+      {memberChannels.length > 0 && profile?.role !== "prospect" && (
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-[11px] uppercase tracking-wider text-sidebar-foreground/50">
+            Member Channels
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {memberChannels.map(ch => (
+                <NavLink
+                  key={ch._id}
+                  href={`/channel/${ch.slug}`}
+                  label={ch.name}
+                  emoji={ch.icon}
+                  isActive={location.pathname === `/channel/${ch.slug}`}
+                  badge={unreadCounts[ch.slug] || undefined}
+                />
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
     </SidebarContent>
   );
 }
@@ -237,10 +247,15 @@ function SidebarUserMenu() {
               <SidebarMenuButton size="lg">
                 <Avatar className="size-8">
                   {profile?.profileImageUrl && (
-                    <AvatarImage src={profile.profileImageUrl} alt={profile.name || "User"} />
+                    <AvatarImage
+                      src={profile.profileImageUrl}
+                      alt={profile.name || "User"}
+                    />
                   )}
                   <AvatarFallback className="bg-brand text-brand-foreground text-sm font-medium">
-                    {profile?.name?.charAt(0).toUpperCase() || user?.name?.charAt(0).toUpperCase() || "U"}
+                    {profile?.name?.charAt(0).toUpperCase() ||
+                      user?.name?.charAt(0).toUpperCase() ||
+                      "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start text-left">

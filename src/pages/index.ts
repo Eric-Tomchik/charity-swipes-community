@@ -1,7 +1,7 @@
 export { AdminPage } from "./AdminPage";
 export { ChannelPage } from "./ChannelPage";
-export { OnboardingPage } from "./OnboardingPage";
 export { CharityPage } from "./CharityPage";
+export { CrmPage } from "./CrmPage";
 export { DashboardPage } from "./DashboardPage";
 export { LandingPage } from "./LandingPage";
 export { LeadDatabasePage } from "./LeadDatabasePage";
@@ -10,6 +10,7 @@ export { LegalPage } from "./LegalPage";
 export { LoginPage } from "./LoginPage";
 export { MessagesPage } from "./MessagesPage";
 export { NotificationsPage } from "./NotificationsPage";
+export { OnboardingPage } from "./OnboardingPage";
 export { RepDashboardPage } from "./RepDashboardPage";
 export { SettingsPage } from "./SettingsPage";
 export { SignupPage } from "./SignupPage";

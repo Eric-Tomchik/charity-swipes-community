@@ -389,6 +389,151 @@ const schema = defineSchema({
     .index("by_businessName", ["businessName"])
     .index("by_state", ["state"])
     .index("by_industry", ["industry"]),
+
+  // ---------------------------------------------------------------------------
+  // CRM / merchant portfolio (restored from the legacy deployment).
+  // Every field beyond the identifying ones is optional: these documents were
+  // written by an older codebase and existing rows must keep validating.
+  // ---------------------------------------------------------------------------
+  crmMerchants: defineTable({
+    businessName: v.string(),
+    dba: v.optional(v.string()),
+    mid: v.optional(v.string()),
+    cloverMerchantId: v.optional(v.string()),
+    status: v.optional(v.string()),
+    industry: v.optional(v.string()),
+    equipmentType: v.optional(v.string()),
+    // PII, stored encrypted as "enc:<base64>" by the legacy backend.
+    ownerName: v.optional(v.string()),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()),
+    monthlyVolume: v.optional(v.number()),
+    monthlyTransactions: v.optional(v.number()),
+    avgTicket: v.optional(v.number()),
+    effectiveRate: v.optional(v.number()),
+    charityDonated: v.optional(v.number()),
+    charityId: v.optional(v.string()),
+    cardMix: v.optional(v.string()),
+    contractEnd: v.optional(v.string()),
+    assignedRepId: v.optional(v.string()),
+    assignedRepName: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    lastTransactionAt: v.optional(v.number()),
+    onboardedAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_status", ["status"])
+    .index("by_assignedRepId", ["assignedRepId"])
+    .index("by_businessName", ["businessName"]),
+
+  crmTransactions: defineTable({
+    merchantId: v.string(),
+    amount: v.optional(v.number()),
+    type: v.optional(v.string()),
+    status: v.optional(v.string()),
+    cardBrand: v.optional(v.string()),
+    cardLast4: v.optional(v.string()),
+    customerName: v.optional(v.string()),
+    cloverPaymentId: v.optional(v.string()),
+    timestamp: v.optional(v.number()),
+    settledAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+  })
+    .index("by_merchantId", ["merchantId"])
+    .index("by_status", ["status"]),
+
+  crmResiduals: defineTable({
+    month: v.string(),
+    grossRevenue: v.optional(v.number()),
+    processorCost: v.optional(v.number()),
+    netRevenue: v.optional(v.number()),
+    charityDonation: v.optional(v.number()),
+    merchantCount: v.optional(v.number()),
+    totalTransactions: v.optional(v.number()),
+    totalVolume: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+  }).index("by_month", ["month"]),
+
+  crmCommissions: defineTable({
+    month: v.string(),
+    repId: v.optional(v.string()),
+    repName: v.optional(v.string()),
+    grossResidual: v.optional(v.number()),
+    splitPercentage: v.optional(v.number()),
+    bonuses: v.optional(v.number()),
+    totalEarnings: v.optional(v.number()),
+    netPayout: v.optional(v.number()),
+    merchantsManaged: v.optional(v.number()),
+    totalVolume: v.optional(v.number()),
+    paidAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+  })
+    .index("by_month", ["month"])
+    .index("by_repId", ["repId"]),
+
+  crmDevices: defineTable({
+    deviceType: v.optional(v.string()),
+    serialNumber: v.optional(v.string()),
+    terminalId: v.optional(v.string()),
+    deploymentStatus: v.optional(v.string()),
+    merchantId: v.optional(v.string()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_deploymentStatus", ["deploymentStatus"])
+    .index("by_merchantId", ["merchantId"]),
+
+  crmChargebacks: defineTable({
+    merchantId: v.optional(v.string()),
+    amount: v.optional(v.number()),
+    reason: v.optional(v.string()),
+    status: v.optional(v.string()),
+    caseNumber: v.optional(v.string()),
+    transactionId: v.optional(v.string()),
+    receivedAt: v.optional(v.number()),
+    dueAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  }).index("by_merchantId", ["merchantId"]),
+
+  crmBoardingApplications: defineTable({
+    legalBusinessName: v.optional(v.string()),
+    dba: v.optional(v.string()),
+    businessType: v.optional(v.string()),
+    industry: v.optional(v.string()),
+    status: v.optional(v.string()),
+    statusHistory: v.optional(v.string()),
+    pricingModel: v.optional(v.string()),
+    adjustmentRate: v.optional(v.number()),
+    estimatedMonthlyVolume: v.optional(v.number()),
+    estimatedAvgTicket: v.optional(v.number()),
+    // PII / bank details, encrypted as "enc:<base64>" by the legacy backend.
+    ownerName: v.optional(v.string()),
+    ownerEmail: v.optional(v.string()),
+    ownerPhone: v.optional(v.string()),
+    ownerDob: v.optional(v.string()),
+    ownerSsn: v.optional(v.string()),
+    businessAddress: v.optional(v.string()),
+    ein: v.optional(v.string()),
+    bankName: v.optional(v.string()),
+    bankAccountNumber: v.optional(v.string()),
+    bankRoutingNumber: v.optional(v.string()),
+    assignedRepId: v.optional(v.string()),
+    assignedRepName: v.optional(v.string()),
+    requestedDeviceType: v.optional(v.string()),
+    requestedDeviceCount: v.optional(v.number()),
+    fiservApplicationId: v.optional(v.string()),
+    mpaGenerated: v.optional(v.boolean()),
+    mpaSignedAt: v.optional(v.number()),
+    attestationSigned: v.optional(v.boolean()),
+    attestationSignedAt: v.optional(v.number()),
+    submittedAt: v.optional(v.number()),
+    approvedAt: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  }).index("by_status", ["status"]),
 });
 
 export default schema;

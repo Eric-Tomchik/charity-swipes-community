@@ -10,6 +10,7 @@ import {
   AdminPage,
   ChannelPage,
   CharityPage,
+  CrmPage,
   DashboardPage,
   LandingPage,
   LeadDatabasePage,
@@ -46,7 +47,10 @@ function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route element={<AppLayout />}>
               <Route path="/community" element={<DashboardPage />} />
-              <Route path="/dashboard" element={<Navigate to="/community" replace />} />
+              <Route
+                path="/dashboard"
+                element={<Navigate to="/community" replace />}
+              />
               <Route path="/channel/:slug" element={<ChannelPage />} />
               <Route path="/tickets" element={<TicketsPage />} />
               <Route path="/charity" element={<CharityPage />} />
@@ -55,6 +59,7 @@ function App() {
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/rep-dashboard" element={<RepDashboardPage />} />
+              <Route path="/crm" element={<CrmPage />} />
               <Route path="/leads" element={<LeadDatabasePage />} />
               <Route path="/lead-finder" element={<LeadFinderPage />} />
               <Route path="/settings" element={<SettingsPage />} />
